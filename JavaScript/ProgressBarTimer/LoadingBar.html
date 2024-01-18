@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading Bar</title>
+    <style>
+      #container {
+        width: 100%;
+        height: 20px;
+        background-color: #f0f0f0;
+        overflow: hidden;
+        border: 1px solid black;
+        border-radius: 10px;
+      }
+
+      .progress-bar {
+        border: 1px solid;
+        height: 100%;
+        width: 0;
+        background-color: rgb(201, 215, 5);
+        transition: width 5s ease-in-out;
+      }
+      .progressBar {
+        margin-top: 20px;
+        height: 20px;
+        border: 1px solid black;
+        width: 0%;
+        margin: 10px 0;
+        background-color: rgb(130, 220, 130);
+        border-radius: 10px;
+      }
+      .transition {
+        width: 100%;
+      }
+      button {
+        padding: 10px;
+        height: 40px;
+      }
+      button:hover {
+        background-color: grey;
+        cursor: pointer;
+        box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+      }
+      p {
+        width: 100px;
+        padding: 10px;
+        color: blue;
+      }
+      .content {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+
+    <hr />
+    <hr />
+    <hr />
+
+    <div class="round"></div>
+    <!--
+         Animate Elements in a sequence. 
+         Problem statement : 
+         Implement a loading Bar that animates from 0 to 100% in 3 seconds. 
+         Start loading bar animation upon a button click. 
+        Queue multiple loading bars if the button is clicked more than once. 
+        Loading bar N starts animating with loading bar N-1 document -->
+
+    <div class="content">
+      <p>Queued: <span id="queued"></span></p>
+      <button onclick="add()">Add ProgressBar</button>
+      <button onclick="addFive()">+5</button>
+    </div>
+
+    <div id="root"></div>
+
+    <script>
+      const container = document.getElementById("container");
+      const createProgressBar = document.createElement("div");
+      createProgressBar.className = "progress-bar";
+      container.appendChild(createProgressBar);
+      setTimeout(function () {
+        createProgressBar.style.width = "100%";
+      });
+      const root = document.getElementById("root");
+      const queued = document.getElementById("queued");
+      let count = 0;
+      function addFive() {
+        if (count === 0) {
+          create();
+        }
+        count = count + 5;
+        queued.innerText = count;
+      }
+      function add() {
+        if (count === 0) {
+          create();
+        }
+        count = count + 1;
+        queued.innerText = count;
+      }
+      function create() {
+        const ele = document.createElement("div");
+        ele.classList.add("progressBar");
+        ele.style = "transition: width 1s ease";
+
+        root.appendChild(ele);
+
+        setTimeout(() => {
+          ele.classList.add("transition");
+        }, 50);
+        ele.addEventListener("transitionend", () => {
+          count = count - 1;
+          queued.innerText = count;
+          if (count >= 1) {
+            create();
+          }
+        });
+        ele.removeEventListener("transitionend", () => {});
+      }
+    </script>
+  </body>
+</html>
